@@ -397,8 +397,119 @@ public:
 
 
 /*==================================================*\
- * title: 树的子结构 *
+ * title: 树的子结构 ***
  * description: 输入两颗二叉树A，B，判断B是不是A的子结构
+ * notice: 
+ * 1. empty tree is subtree of any tree, but no in this testcase
+ * 2. this issue can be optimize with kmp
+\*==================================================*/
+/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};*/
+class Solution1 {
+public:
+    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2){
+        if(pRoot1 == NULL || pRoot2 == NULL) return false;
+        return isSubtree(pRoot1, pRoot2) || HasSubtree(pRoot1->left, pRoot2) || HasSubtree(pRoot1->right, pRoot2);
+    }
+
+    bool isSubtree(TreeNode* pRoot1, TreeNode* pRoot2){
+        if(pRoot2 == NULL) return true;
+        if(pRoot1 == NULL) return false;
+        return pRoot1->val == pRoot2->val && isSubtree(pRoot1->left, pRoot2->left) && isSubtree(pRoot1->right, pRoot2->right);
+    }
+};
+
+
+class Solution2 {
+/* 改进算法，时间复杂度O（m+n）
+ * 1.将root1和root2分别按先序遍历序列化。
+ * 2.运用KMP算法匹配序列化结果。
+ */
+    public boolean HasSubtree(TreeNode root1,TreeNode root2) {
+        if(root2==null)
+            return false;// 空树本应是任意树的子结构，但从测试集来看，应视为false
+        if(root1==null)
+            return false;
+        char[] str = Serialize(root1).toCharArray();
+        char[] pattern = Serialize(root2).toCharArray();
+        int[] next = new int[pattern.length];
+        System.out.println(String.valueOf(str));
+        System.out.println(String.valueOf(pattern));
+        getNext(pattern,next);
+        return KMP(str,pattern,next);
+         
+    }
+    private boolean KMP(char[] str, char[] pattern, int[] next) {
+        if(str==null||pattern==null)
+            return false;
+        if(str.length<pattern.length)
+            return false;
+        int i=0,j=0,len = str.length;
+        while(i<len&&j<pattern.length){
+            if(j==-1||str[i]==pattern[j]){
+                i++;j++;
+            }else{
+                j = next[j];
+            }
+        }
+        if(j==pattern.length)// 表示最后一个字符也相等，匹配成功
+            return true;
+        return false;
+    }
+     
+    private void getNext(char[] pattern, int[] next) {
+        if(pattern==null||pattern.length==0)
+            return;
+        int i=0,j=-1;
+        next[0] = -1;
+        while(i<pattern.length-1){
+            if(j==-1||pattern[i]==pattern[j]){
+                ++i;++j;               
+                if(pattern[i]==pattern[j]){
+                    next[i] = next[j];
+                }else{
+                    next[i] = j;
+                }
+            }else{
+                j = next[j];
+            }
+        }
+    }
+    public String Serialize(TreeNode root) {
+        if(root==null)
+            return "";
+        this.buffer = new StringBuffer();
+        SerializeF(root);
+        int i;
+        // 删除序列尾部的$
+        for(i = buffer.length()-1;i>=0;i--){
+            if(buffer.charAt(i)==','||buffer.charAt(i)=='$'){
+                continue;
+            }else
+                break;
+        }
+        buffer.delete(i+1,buffer.length());
+        return buffer.toString();
+    }
+};
+
+
+/*==================================================*\
+ * title: 二叉树的镜像 *
+ * description: 操作给定的二叉树，将其变换为源二叉树的镜像
+ 二叉树的镜像定义：  源二叉树       镜像二叉树
+                    8            8
+                   / \          / \
+                  10  6        6   10
+                 / \ / \      / \  / \
+                11 9 7 5     5 7  9 11
 \*==================================================*/
 /*
 struct TreeNode {
@@ -411,11 +522,109 @@ struct TreeNode {
 };*/
 class Solution {
 public:
-    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
-    {
-
+    void Mirror(TreeNode *pRoot) {
+        if(pRoot == NULL) return;
+        TreeNode *tmp = pRoot->left;
+        pRoot->left = pRoot->right;
+        pRoot->right = tmp;
+        Mirror(pRoot->left);
+        Mirror(pRoot->right);
     }
 };
+
+
+/*==================================================*\
+ * title: 顺时针打印矩阵 ****
+ * description: 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字
+ 例如，如果输入如下矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+ 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.
+ * notice: 边界条件要理清楚，使用易识别的变量名
+\*==================================================*/
+class Solution {
+public:
+    vector<int> printMatrix(vector<vector<int>> matrix) {
+        int row = matrix.size(), col = matrix[0].size();
+        vector<int> results;
+        if(col == 0 || row == 0) return results;
+
+        int left = 0, right = col - 1, top = 0, down = row - 1;
+        while(top <= down && left <= right){
+            for(int i = left; i <= right; ++i) results.push_back(matrix[top][i]);
+            for(int i = top + 1; i <= down; ++i) results.push_back(matrix[i][right]);
+            if(top<down)for(int i = right - 1; i >= left; --i) results.push_back(matrix[down][i]);
+            if(left<right)for(int i = down - 1; i > top; --i) results.push_back(matrix[i][left]);
+            left++, right--, top++, down--;
+        }
+        return results;
+    }
+};
+
+
+
+/*==================================================*\
+ * title: 包含min函数的栈 ***
+ * description: 定义栈的数据结构，请在该类型中实现一个能够得到栈最小元素的min函数。
+ * hint: 每个负值之前存放的是相对当前最小的的差值，可通过减去该值获得当前最小值。
+\*==================================================*/
+class Solution {
+public:
+    void push(int value) {
+        if(stk.empty()){
+            stk.push(0);
+            mini = value;
+            return;
+        }
+        stk.push(value - mini);
+        if(value < mini) mini = value;
+        
+    }
+    void pop() {
+        int x = stk.top();
+        if(x < 0) mini -= x;
+        stk.pop();
+    }
+    int top() {
+        return stk.top() + mini;
+    }
+    int min() {
+        return mini;
+    }
+
+private:
+    stack<int> stk;
+    int mini;
+};
+
+
+
+/*==================================================*\
+ * title: 栈的压入、弹出序列 ***
+ * description: 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
+    假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，
+    序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
+\*==================================================*/
+class Solution {
+public:
+    bool IsPopOrder(vector<int> pushV,vector<int> popV) {
+        if(pushV.empty()) return false;
+        stack<int> st;
+        for(int i = 0, j = 0, len = pushV.size(); i < len; ){
+            st.push(pushV[i++]);
+            while(!st.empty() && j < len && st.top() == popV[j]){
+                st.pop();
+                j++;
+            }
+        }
+        return st.empty();
+    }
+};
+
+
+
+
+
+
+
 
 
 
