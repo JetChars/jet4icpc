@@ -621,12 +621,161 @@ public:
 
 
 
+/*==================================================*\
+ * title: 从上往下打印二叉树 **
+ * description: 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+\*==================================================*/
+/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};*/
+class Solution {
+public:
+    vector<int> PrintFromTopToBottom(TreeNode *root) {
+        vector<int> res;
+        if(root == NULL) return res;
+
+        queue<TreeNode*> qu;
+        TreeNode* tmp;
+        qu.push(root);
+        while(!qu.empty()){
+            tmp = qu.front();
+            res.push_back(tmp->val);
+            qu.pop();
+            if(tmp->left != NULL)qu.push(tmp->left);
+            if(tmp->right != NULL)qu.push(tmp->right);
+        }
+
+        return res;
+    }
+};
 
 
 
+/*==================================================*\
+ * title: 二叉搜索树(二叉排序、查找树)的后序遍历序列 **
+ * description: 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+    如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+\*==================================================*/
+class Solution {
+public:
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        int len = sequence.size();
+        if(len == 0) return false;
+        if(len <= 2) return true;
+
+        vector<int> left, right;
+        int root = sequence.back(), i = 0, j;
+        while(sequence[i] < root) ++i;
+        j = i;
+        while(j < len - 1)if(sequence[j++] < root) return false;
+        left.assign(sequence.begin(), sequence.begin() + i);
+        right.assign(sequence.begin() + i, sequence.end() - 1);
+
+        bool l = true, r = true;
+        if(!left.empty()) l = VerifySquenceOfBST(left);
+        if(!right.empty()) r = VerifySquenceOfBST(right);
+        return l && r;
+
+    }
+};
+
+
+calss Solution2 {
+public:
+    bool judge(vector<int>& a, int l, int r){
+        if(l >= r) return true;
+        int i = r;
+        while(i > l && a[i - 1] > a[r]) --i;
+        for(int j = i - 1; j >= l; --j) if(a[j] > a[r]) return false;
+        return judge(a, l, i - 1) && (judge(a, i, r - 1));
+    }
+    bool VerifySquenceOfBST(vector<int> a) {
+        if(!a.size()) return false;
+        return judge(a, 0, a.size() - 1);
+    }
+};
+}
 
 
 
+/*==================================================*\
+ * title: 二叉树中和为某一值的路径 ****
+ * description: 输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+    路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径
+ * notice: copy code should really carefully
+\*==================================================*/
+/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};*/
+class Solution {
+public:
+    vector<vector<int> > FindPath(TreeNode* root,int expectNumber) {
+        vector<vector<int>> res, ltmp, rtmp;
+        if(root == NULL || root->val > expectNumber || expectNumber <= 0) return res;
+
+        if(root->left != NULL){
+            ltmp = FindPath(root->left, expectNumber - root->val);
+            if(ltmp.size()){
+                for(int i = 0; i < ltmp.size(); ++i){
+                    ltmp[i].insert(ltmp[i].begin(), root->val);
+                    res.push_back(ltmp[i]);
+                }
+            }
+        }
+        if(root->right != NULL){
+            rtmp = FindPath(root->right, expectNumber - root->val);
+            if(rtmp.size()){
+                for(int i = 0; i < rtmp.size(); ++i){
+                    rtmp[i].insert(rtmp[i].begin(), root->val);
+                    res.push_back(rtmp[i]);
+                }
+            }
+        }    
+        
+        if(expectNumber == root->val && root->left == NULL && root->right == NULL){
+            vector<int> re;
+            re.push_back(expectNumber);
+            res.push_back(re);
+        }
+
+        return res;
+    }
+};
+
+
+/*==================================================*\
+ * title: 复杂链表的复制
+ * description: 输入一个复杂链表（每个节点中有节点值，以及两个指针，
+    一个指向下一个节点，另一个特殊指针指向任意一个节点）。
+\*==================================================*/
+/*
+struct RandomListNode {
+    int label;
+    struct RandomListNode *next, *random;
+    RandomListNode(int x) :
+            label(x), next(NULL), random(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    RandomListNode* Clone(RandomListNode* pHead)
+    {
+  
+    }
+};
 
 
 
