@@ -756,9 +756,13 @@ public:
 
 
 /*==================================================*\
- * title: 复杂链表的复制
+ * title: 复杂链表的复制 *****
  * description: 输入一个复杂链表（每个节点中有节点值，以及两个指针，
     一个指向下一个节点，另一个特殊指针指向任意一个节点）。
+ * solution: A->A->A  ==>  A->B->A->B->A->B
+    1. add new nodes B(A->next)
+    2. B->random = A->random->next;
+    3. split
 \*==================================================*/
 /*
 struct RandomListNode {
@@ -771,11 +775,109 @@ struct RandomListNode {
 */
 class Solution {
 public:
+     
     RandomListNode* Clone(RandomListNode* pHead)
     {
-  
+        if(!pHead) return NULL;
+        RandomListNode *p, *res, *tmp;
+        for(p = pHead; p; p = tmp->next){
+            tmp = new RandomListNode(p->label);
+            tmp->next = p->next;
+            p->next = tmp;
+        }
+        for(p = pHead; p; p = p->next->next)if(p->random) p->next->random = p->random->next;
+        for(p = pHead, res = pHead->next; p->next; p = tmp){
+            tmp = p->next;
+            p->next = tmp->next;
+        }
+
+        return res;
     }
 };
+
+
+/*==================================================*\
+ * title: 二叉搜索树与双向链表 *****
+ * description: 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+                要求不能创建任何新的结点，只能调整树中结点指针的指向。
+ * HINT: 递归法求解要考虑最原子的操作才才合理
+         还可以考虑使用队列解决该问题
+\*==================================================*/
+/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};*/
+class Solution0 {  // now working
+public:
+    bool isLeaf(TreeNode* node){
+        return node->left == NULL && node->right == NULL;
+    }
+
+    TreeNode* Convert(TreeNode* pRootOfTree){
+        if(pRootOfTree || isLeaf(pRootOfTree)) return pRootOfTree;
+        TreeNode *left = pRootOfTree->left, *right = pRootOfTree->right, *res = pRootOfTree;
+        if(left){
+            res = left;
+            while(left->right) left = left->right;
+            if(pRootOfTree->left) res = Convert(pRootOfTree->left);
+            left->right = pRootOfTree;
+            pRootOfTree->left = left;
+        }
+        if(right){
+            while(right->left) right = right->left;
+            if(pRootOfTree->right) Convert(pRootOfTree->right);
+            right->left = pRootOfTree;
+            pRootOfTree->right = right;
+        }
+        return res;
+    }
+};
+
+
+class Solution {
+public:
+    TreeNode* Convert(TreeNode* root){
+        if(!root) return NULL;
+        if(root->left == NULL && root->right == NULL) return root;
+
+        TreeNode *left = NULL, *right, *last;
+        if(root->left){
+            left = Convert(root->left);
+            last = left;
+            while(last->right)last = last->right;
+            last->right = root;
+            root->left = last;
+        }
+        if(root->right){
+            right = Convert(root->right);
+            right->left = root;
+            root->right = right;
+        }
+        return left ? left : root;
+    }
+};
+
+
+/*==================================================*\
+ * title: 字符串的排列
+ * description: 输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+                例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+                结果请按字母顺序输出。
+                输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母
+\*==================================================*/
+class Solution {
+public:
+    vector<string> Permutation(string str) {
+        
+    }
+};
+
+
 
 
 
