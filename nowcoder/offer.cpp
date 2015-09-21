@@ -872,16 +872,77 @@ public:
 \*==================================================*/
 class Solution {
 public:
+    void help(vector<string> &res,int index,int len,string str){
+        if(index == len-1){
+            res.push_back(str);
+            return;
+        }
+        for(int i = index; i <= len-1; i++){
+            if(i != index && str[i] == str[index]) continue;  //相同值不交换
+            swap(str[i], str[index]);
+            help(res, index+1, len, str);  //已交换头一个字符
+            swap(str[i], str[index]);
+        }
+         
+    }
     vector<string> Permutation(string str) {
-        
+        vector<string> res;
+        help(res, 0, str.size(), str);
+        sort(res.begin(), res.end());
+        return res;
     }
 };
 
 
+/*==================================================*\
+ * title: 数组中出现次数超过一半的数字 **
+ * description: 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+                例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。
+                由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。
+\*==================================================*/
+class Solution {
+public:
+    int MoreThanHalfNum_Solution(vector<int> num) {
+        int len = num.size();
+        if(len == 0) return 0;
+        if(len == 1) return num[0];
+        int half = len / 2;
+        map<int, int> res;
+        for(vector<int>::iterator iter = num.begin(); iter != num.end(); ++iter){
+            if(res.find(*iter) == res.end()) res[*iter] = 1;
+            else if(++res[*iter] > half) return *iter;
+        }
+        return 0;
+    }
+};
 
 
+/*==================================================*\
+ * title: 最小的K个数
+ * description: 输入n个整数，找出其中最小的K个数。
+                例如输入4,5,1,6,2,7,3,8这8个数字，
+                则最小的4个数字是1,2,3,4,
+\*==================================================*/
+class Solution {
+public:
+    vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
+        vector<int> res;
+        if(input.size() < k || k <= 0) return res;  //需注意每一个变量的合法性
 
+        res.insert(res.begin(), input.begin(), input.begin() + k);
+        sort(res.begin(), res.end());
 
-
-
+        for(vector<int>::iterator iter = input.begin() + k; iter != input.end(); ++iter){
+            if(res.back() > *iter){
+                vector<int>::iterator it = res.begin();
+                while(it != res.end() && *it < *iter) ++it;
+                if(it != res.end()){
+                    res.insert(it, *iter);
+                    res.pop_back();
+                }
+            }
+        }
+        return res;
+    }
+};
 
