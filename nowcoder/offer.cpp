@@ -1015,12 +1015,78 @@ public:
 };
 
 
+/*==================================================*\
+ * title: 把数组排成最小的数
+ * description: 输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+                例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+ \*==================================================*/
+class Solution {
+public:
+    static bool cmp(string s1, string s2){
+        return s1+s2 < s2+s1;
+    }
+    string PrintMinNumber(vector<int> num) {
+        vector<string> str;
+        for (vector<int>::iterator iter = num.begin(); iter != num.end(); iter++)str.push_back(to_string(*iter));
+        // 此处到底需要替换成stable_sort()吗？
+        sort(str.begin(), str.end(), cmp);
+        string res;
+        for (vector<string>::iterator iter = str.begin(); iter != str.end(); iter++)res += *iter;
+        return res;
+    }
+};
 
 
+/*==================================================*\
+ * title: 丑数 *****
+ * description: 把只包含因子2、3和5的数称作丑数（Ugly Number）。
+                例如6、8都是丑数，但14不是，因为它包含因子7。
+                习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+ \*==================================================*/
+class Solution { //这是个错误解， GetUglyNumber_Solution(7) != 8, 而是 9， 为啥会跳过8呢？
+public:
+    static vector<int> res;
+    inline int min(int a, int b){
+        return a < b ? a : b;
+    }
+    int GetUglyNumber_Solution(int index) {
+        if (index <= 0) return 0;
+        if (index <= res.size()) return res[index - 1];
+    
+
+        for(vector<int>::iterator iter2 = res.begin(), iter3 = res.begin(), iter5 = res.begin(); res.size() < index; ){
+            while(*iter2 * 2 <= res.back())iter2++;
+            while(*iter3 * 3 <= res.back())iter3++;
+            while(*iter5 * 5 <= res.back())iter5++;
+            res.push_back(min(*iter2 * 2, min(*iter3 * 3, *iter5 * 5)));
+        }
+        return res.back();
+    }
+};
+
+vector<int> Solution::res(1, 1);
 
 
+class Solution {
+public:
+    int GetUglyNumber_Solution(int index) {
+        if(index < 1) return 0;
 
-
+        int count = 1, *arr = new int[index];
+        int *num2 = arr, *num3 = arr, *num5 = arr;
+        for(*arr = 1; count < index; count++) {
+            arr++;
+            *arr = min(*num2 * 2, min(*num3 * 3, *num5 * 5));
+            while(*num2 * 2 <= *arr)num2++;
+            while(*num3 * 3 <= *arr)num3++;
+            while(*num5 * 5 <= *arr)num5++;
+        }
+        return *arr;
+    }
+    inline int min(int a, int b){
+        return a <= b ? a : b;
+    }
+};
 
 
 
