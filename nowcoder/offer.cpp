@@ -948,7 +948,7 @@ public:
 
 
 /*==================================================*\
- * title: 连续子数组的最大和
+ * title: 连续子数组的最大和 *
  * description: HZ偶尔会拿些专业问题来忽悠那些非计算机专业的同学。
                 今天测试组开完会后,他又发话了:
                 在古老的一维模式识别中,常常需要计算连续子向量的最大和,当向量全为正数的时候,问题很好解决。
@@ -972,8 +972,47 @@ public:
 };
 
 
+/*==================================================*\
+ * title: 整数中1出现的次数（从1到n整数中1出现的次数） ****
+ * description: 求出1~13的整数中1出现的次数,并算出100~1300的整数中1出现的次数？
+                为此他特别数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次,但是对于后面问题他就没辙了。
+                ACMer希望你们帮帮他,并把问题更加普遍化,可以很快的求出任意非负整数区间中1出现的次数。
+ \*==================================================*/
+class Solution0 { //写的好渣啊
+public:
+    int NumberOf1Between1AndN_Solution(int n){
+        if (n <= 0) return 0;
+        
+        int dig = int(log(n) / log(10)) - 1, res = 0, multi = 1, i; //还可以使用log10()
+        vector<int> ones;   // storage results of 1 ~ {n x 9}
+        ones.push_back(1);
+        for (i = 1; i < dig; ++i) {
+            multi *= 10;
+            ones.push_back(ones.back()*10 + multi);
+        }
+        
+        for (i = 1, multi *= 10; i <= dig; ++i, n %= multi, multi %= 10) {
+            if (n / multi > 1) res += n / multi * ones[dig - i] + multi;
+            else res += multi * ones[dig - i] + n % multi;
+        }
+        if (n > 0) ++res;
+        return res;
+    }
+};
 
 
+class Solution { //refer to http://www.cnblogs.com/nailperry/p/4752987.html
+public:
+    int NumberOf1Between1AndN_Solution(int n){
+        int count = 0;
+        long long i = 1;
+        for(i = 1; i <= n; i *= 10){  //i表示当前分析的是哪一个数位, 分割成a,b两部分
+            int a = n/i, b = n%i;
+            count += (a + 8)/10*i + (a%10 == 1)*(b + 1); //分三种情况，i位为0/1/(2~9), i==1为临界情况
+        }
+        return count;
+    }
+};
 
 
 
