@@ -1089,6 +1089,98 @@ public:
 };
 
 
+/*==================================================*\
+ * title: 第一个只出现一次的字符位置 **
+ * description: 在一个字符串(1<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符的位置。
+                若为空串，返回-1。位置索引从0开始
+ \*==================================================*/
+class Solution {
+public:
+    int FirstNotRepeatingChar(string str) {
+        if(str.size() == 0) return -1;
+        vector<char> seq;
+        map<char, int> res;
+        char a = '0';
+
+        for (string::iterator iter = str.begin(); iter != str.end(); ++iter){
+            if(res.find(*iter) == res.end()){
+                res[*iter] = 1;
+                seq.push_back(*iter);
+            }else res[*iter]++;
+        }
+
+        for(vector<char>::iterator iter = seq.begin(); iter != seq.end(); ++iter){
+            if(res.find(*iter) != res.end() && res[*iter] == 1){
+                a = *iter;
+                break;
+            }
+        }
+
+        for(int i=0; i < str.size(); ++i) if(str[i] == a) return i;
+        return -1;
+    }
+};
+
+
+/*==================================================*\
+ * title: 数组中的逆序对 * or *****
+ * des. : 在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。
+          输入一个数组，求出这个数组中的逆序对的总数。
+ * input: [1,2,3,4,7,6,5]
+ * ouput: 3
+ \*==================================================*/
+class Solution {
+public:
+    int InversePairs(vector<int> data) {
+        if(data.size() <= 1) return 0;
+        int count = 0;
+        for (int i = 0; i < data.size() - 1; ++i){
+            for (int j = i+1; j < data.size(); ++j) if(data[j] < data[i]) count++;
+        }
+        return count;
+    }
+};
+
+
+#define lb(x) ((x) & -(x))
+class BIT{
+    int n;
+    map<int, int> d;
+public:
+    BIT(int n_) : n(n_) {}
+    void add(int i, int v){
+        for(; i <= n; i += lb(i)) d[i] += v;
+    }
+    int sum(int i){
+        int r = 0;
+        for(; i; i -= lb(i)) r += d[i];
+        return r;
+    }
+};
+class Solution {
+public:
+    int InversePairs(vector<int> d) {
+        int mi = 0x7fffffff, mx = 0x80000000;
+        for(int i = 0; i < d.size(); ++i) mi = min(mi, d[i]), mx = max(mx, d[i]);
+        int r = 0;
+        BIT bit(mx - mi + 5);
+        for(int i = (int)d.size() - 1; i >= 0; --i){
+            r += bit.sum(d[i] - mi);
+            bit.add(d[i] - mi + 1, 1);
+        }
+        return r;
+    }
+};
+
+
+
+
+
+
+
+
+
+
 
 
 
