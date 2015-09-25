@@ -32,7 +32,8 @@ public:
 
 
 /*==================================================*\
- * print a linked list in reverse
+ * title: 从尾到头打印链表 *
+ * des. : 输入一个链表，从尾到头打印链表每个节点的值。
 \*==================================================*/
 /**
 *  struct ListNode {
@@ -266,7 +267,7 @@ private:
  * title: 二进制中1的个数
  * des. : 输入一个整数，输出该数二进制表示中1的个数。
  *        其中负数用补码表示
- * hint : 典型的位运算
+ * hint : 典型的位运算，对正负数都适用
 \*==================================================*/
 class Solution {
 public:
@@ -285,6 +286,9 @@ public:
  * title: 数值的整数次方
  * des. : 给定一个double类型的浮点数base和int类型的整数exponent。
  *        求base的exponent次方
+ * Hint : 1. 确保base不为0
+          2. 将负指数换成正指数
+          3. 指数二进制化
 \*==================================================*/
 class Solution {
 public:
@@ -312,14 +316,19 @@ public:
 
 /*==================================================*\
  * title: 调整数组顺序使奇数位于偶数前面 **
- * note: boundary condition
- * description: 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变
+ * note : boundary condition
+ * des. : 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+          使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，
+          并保证奇数和奇数，偶数和偶数之间的相对位置不变
+ * hint : 1. create an array to storage even numbers
+          2. mean while, move odd numbers to the front of vector
+          3. put even numbers
 \*==================================================*/
 class Solution {
 public:
     void reOrderArray(vector<int> &array) {
         int len = array.size(), pos = 0;
-        if (len < 2) return;
+        if (len <= 1) return;
 
         vector<int> even;
         for (int i = 0; i < len; i++){
