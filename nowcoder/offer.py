@@ -107,7 +107,7 @@ class Solution:
 
 #==================================================#
 # title: 用两个栈实现队列
-# des. : 用两个栈来实现一个队列，完成队列的Push和Pop操作。 
+# des. : 用两个栈来实现一个队列，完成队列的Push和Pop操作。
 #		 队列中的元素为int类型
 # Note : 不能tab和空格混用
 #==================================================#
@@ -132,8 +132,129 @@ class Solution:
 
 
 
+#==================================================#
+# title: 两个链表的第一个公共结点 **
+# des. : 输入两个链表，找出它们的第一个公共结点。
+# Note :
+#==================================================#
+
+# -*- coding:utf-8 -*-
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+class Solution:
+    def FindFirstCommonNode(self, pHead1, pHead2):
+        # write code here
+        if pHead1 == None or pHead2 == None:
+            return None
+
+        len1, len2 = 0, 0
+        p, q = pHead1, pHead2
+        while p:
+            len1 += 1
+            p = p.next
+        while q:
+            len2 += 1
+            q = q.next
+
+        p, q = pHead1, pHead2
+        if len1 < len2:
+            for i in xrange(len2-len1):
+                q = q.next
+        elif len1 > len2:
+            for i in xrange(len1-len2):
+                p = p.next
+
+        while p:
+            if p == q:
+                return p
+            p, q = p.next, q.next
+
+        return None
 
 
+
+#==================================================#
+# title: 数字在排序数组中出现的次数 *
+# des. : 统计一个数字在排序数组中出现的次数。
+# Note :
+#==================================================#
+
+# -*- coding:utf-8 -*-
+class Solution:
+    def GetNumberOfK(self, data, k):
+        # write code here
+        if data == None:
+            return 0
+
+        res = 0
+        for i in data:
+            if i == k:
+                res += 1
+
+        return res
+
+
+
+#==================================================#
+# title: 二叉树的深度 *
+# des. : 输入一棵二叉树，求该树的深度。
+#        从根结点到叶结点依次经过的结点（含根、叶结点）
+#        形成树的一条路径，最长路径的长度为树的深度。
+# Note :
+#==================================================#
+# -*- coding:utf-8 -*-
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution:
+    def TreeDepth(self, pRoot):
+        # write code here
+        if pRoot == None:
+            return 0
+        self.left, self.right = self.TreeDepth(pRoot.left), self.TreeDepth(pRoot.right)
+        return self.left+1 if self.left > self.right else self.right+1
+
+
+
+
+#==================================================#
+# title: 平衡二叉树 ***
+# des. : 输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+# Note :
+#==================================================#
+# -*- coding:utf-8 -*-
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution:
+    def getDepth(self, pRoot):
+        if pRoot == None:
+            return 0
+        self.left, self.right = self.getDepth(pRoot.left), self.getDepth(pRoot.right)
+        if self.left == -1 or self.right == -1 or abs(self.left - self.right) > 1:
+            return -1
+        return self.left+1 if self.left > self.right else self.right+1
+
+    def IsBalanced_Solution(self, pRoot):
+        # write code here
+        if self.getDepth(pRoot) == -1:
+            return False
+        return True
+
+
+
+
+#==================================================#
+# title:
+# des. :
+# Note :
+#==================================================#
 
 
 
