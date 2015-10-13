@@ -66,20 +66,69 @@ class Solution:
 class Solution:
     # 返回构造的TreeNode根节点
     def reConstructBinaryTree(self, pre, tin):
-    	if len(pre) < 1: return None
-        res = TreeNode(pre[0])
-        for i in range(len(pre)):
-        	if(tin[i] == pre[0]):
-        		res.left = reConstructBinaryTree(pre[1:i+1], tin[0:i])
-        		res.right = reConstructBinaryTree(pre[i+1:], tin[i:])
-        		break
-        return res
+        if len(pre) == 0:
+            return None
+        else:
+            res = TreeNode(pre[0])
+            for i in range(len(pre)):
+                if(tin[i] == pre[0]):
+                    res.left = self.reConstructBinaryTree(pre[1:i+1], tin[0:i])
+                    res.right = self.reConstructBinaryTree(pre[i+1:], tin[i+1:])
+                    break
+            return res
+
+
+# Solution2
+class Solution:
+    # 返回构造的TreeNode根节点
+    def reConstructBinaryTree(self, pre, tin):
+        # write code here
+        l = len(pre)
+        if l==0:
+            return None
+        else:
+            patitionNum = pre[0]
+            i = 0
+            while tin[i]!=patitionNum:
+                i += 1
+            pre_left = pre[1:i+1]
+            pre_right = pre[i+1:l]
+            tin_left = tin[0:i]
+            tin_right = tin[i+1:]
+            leftNode = self.reConstructBinaryTree(pre_left,tin_left)
+            rightNode = self.reConstructBinaryTree(pre_right,tin_right)
+            node = TreeNode(patitionNum)
+            node.left = leftNode
+            node.right = rightNode
+            return node
 
 
 
 
+#==================================================#
+# title: 用两个栈实现队列
+# des. : 用两个栈来实现一个队列，完成队列的Push和Pop操作。 
+#		 队列中的元素为int类型
+# Note : 不能tab和空格混用
+#==================================================#
+# -*- coding:utf-8 -*-
+class Solution:
+    def __init__(self):
+        self.stack1 = []
+        self.stack2 = []
 
+    def push(self, node):
+        self.stack1.append(node)
 
+    def pop(self):
+        if self.stack2:
+            return self.stack2.pop()
+        elif self.stack1:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+            return self.stack2.pop()
+        else:
+            return None
 
 
 
