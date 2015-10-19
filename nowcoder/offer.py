@@ -327,7 +327,7 @@ class Solution:
             while a[i]+a[j] > tsum:
                 j -= 1
             while a[i]+a[j] < tsum:
-                j += 1
+                i += 1
             if a[i]+a[j] == tsum and i < j:
                 return [a[i], a[j]]
             i += 1
@@ -336,28 +336,87 @@ class Solution:
 
 
 #==================================================#
-# title:
-# des. :
-# Note :
+# title: 翻转单词顺序列 **
+# des. : JOBDU最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。
+#        同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。
+#        例如，“student. a am I”。后来才意识到，
+#        这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。
+#        Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？
+# Note : we should specifiy the white space ' ', not using the default val
 #==================================================#
-
-
-
-#==================================================#
-# title:
-# des. :
-# Note :
-#==================================================#
-
-
+# -*- coding:utf-8 -*-
+class Solution:
+    def ReverseSentence(self, s):
+        # write code here
+        return ' '.join(s.split(' ')[::-1])
 
 
 #==================================================#
-# title:
-# des. :
-# Note :
+# title: 扑克牌顺子
+# des. : LL今天心情特别好,因为他去买了一副扑克牌,
+#        发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...
+#        他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,
+#        如果抽到的话,他决定去买体育彩票,嘿嘿！！
+#        “红心A,黑桃3,小王,大王,方片5”,“Oh My God!”不是顺子.....
+#        LL不高兴了,他想了想,决定大\小 王可以看成任何数字,
+#        并且A看作1,J为11,Q为12,K为13。
+#        上面的5张牌就可以变成“1,2,3,4,5”(大小王分别看作2和4),“So Lucky!”。
+#        LL决定去买体育彩票啦。
+#        现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何。
+#        为了方便起见,你可以认为大小王是0。
+# Note : 1. king == 0, and 4 kings maximum
+#        2. return false, if have same cards other than 0
 #==================================================#
+# -*- coding:utf-8 -*-
+class Solution:
+    def IsContinuous(self, numbers):
+        # write code here
+        if len(numbers) != 5:
+            return False
 
+        numbers.sort()
+        zeros,cnt = 0,0
+        for i in numbers:
+            if not i:
+                zeros += 1
+            else:
+                break
+        for i in range(zeros+1, len(numbers)):
+            if numbers[i] == numbers[i-1]:
+                return False
+            cnt += numbers[i] - numbers[i-1] - 1
+
+        return zeros >= cnt
+
+
+#==================================================#
+# title: 孩子们的游戏(圆圈中最后剩下的数)
+# des. : 每年六一儿童节,NowCoder都会准备一些小礼物去看望孤儿院的小朋友,今年亦是如此。
+#        HF作为NowCoder的资深元老,自然也准备了一些小游戏。
+#        其中,有个游戏是这样的:首先,让小朋友们围成一个大圈。
+#        然后,他随机指定一个数m,让编号为0的小朋友开始报数。
+#        每次喊到m的那个小朋友要出列唱首歌,然后可以在礼品箱中任意的挑选礼物,
+#        并且不再回到圈中,从他的下一个小朋友开始,继续0...m-1报数....
+#        这样下去....直到剩下最后一个小朋友,可以不用表演,
+#        并且拿到NowCoder名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。请你试着想下,哪个小朋友会得到这份礼品呢？
+# Note : f(1) = 0
+#        f(2) = (m%2 + 2)%2
+#        f(3) = (f(2)+m)%3
+#==================================================#
+# -*- coding:utf-8 -*-
+class Solution:
+    def LastRemaining_Solution(self, n, m):
+        # write code here
+        if n <=0 and m <=0:
+            return -1
+        elif n == 0:
+            return 0
+
+        res = 0;
+        for i in xrange(n):
+            res = (res+m)%(i+1)
+
+        return res
 
 
 #==================================================#
