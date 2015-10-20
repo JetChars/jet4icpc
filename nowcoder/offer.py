@@ -399,9 +399,10 @@ class Solution:
 #        并且不再回到圈中,从他的下一个小朋友开始,继续0...m-1报数....
 #        这样下去....直到剩下最后一个小朋友,可以不用表演,
 #        并且拿到NowCoder名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。请你试着想下,哪个小朋友会得到这份礼品呢？
-# Note : f(1) = 0
-#        f(2) = (m%2 + 2)%2
-#        f(3) = (f(2)+m)%3
+# Note : k = m%n, 则第一个淘汰的是k-1, 剩余的是 k,k+1,..,k-3,k-2
+#        若将他们重新排序得到新的数列           0,1,...,n-2
+#        hence,      f(n,m) = (f(n-1,m)+m)%n
+#        and,        f(n+1,m) = (f(n,m)+m)%(n+1)
 #==================================================#
 # -*- coding:utf-8 -*-
 class Solution:
@@ -420,10 +421,86 @@ class Solution:
 
 
 #==================================================#
-# title:
-# des. :
-# Note :
+# title: 不用加减乘除做加法
+# des. : 写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+# Note : 分别使用^和&来保存 异或位为1的位置 和 同位1的位置
 #==================================================#
+# 1. stupidest way
+# -*- coding:utf-8 -*-
+class Solution:
+    def Add(self, a, b):
+        # write code here
+        lst,flag = [],0
+        while a!=0 and b!=0:
+            x,y = a&1,b&1
+            if x^y:
+                if flag:
+                    lst.append(0)
+                    flag = 1
+                else:
+                    lst.append(1)
+                    flag = 0
+            else:
+                if flag:
+                    lst.append(1)
+                else:
+                    lst.append(0)
+                if x&y:
+                    flag = 1
+                else:
+                    flag = 0
+            a >>= 1
+            b >>= 1
+
+        while a!=0:
+            x = a&1
+            if x^flag:
+                lst.append(1)
+                flag = 0
+            else:
+                lst.append(0)
+                if x&flag:
+                    flag = 1
+                else:
+                    flag = 0
+            a >>= 1
+
+        while b!=0:
+            x = b&1
+            if x^flag:
+                lst.append(1)
+                flag = 0
+            elif x&flag:
+                lst.append(0)
+                flag = 1
+            else:
+                lst.append(0)
+                flag = 0
+            b >>= 1
+
+        if flag:
+            lst.append(1)
+
+        lst.reverse()
+        res = 0
+        for i in lst:
+            res <<= 1
+            res ^= i
+
+        return res
+
+# solution2
+# -*- coding:utf-8 -*-
+class Solution:
+    def Add(self, a, b):
+        # write code here
+        while b:
+            x, y = a^b, a&b
+            y <<= 1
+            a, b = x, y
+
+        return a
+
 
 
 
