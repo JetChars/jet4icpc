@@ -505,10 +505,31 @@ class Solution:
 
 
 #==================================================#
-# title:
-# des. :
-# Note :
+# title: 把字符串转换成整数
+# des. : 将一个字符串转换成一个整数，要求不能使用字符串转换整数的库函数。
+# Note : 1. can be null
+#        2. can be single '-' or '+'
 #==================================================#
+# -*- coding:utf-8 -*-
+class Solution:
+    def StrToInt(self, s):
+        # write code here
+        if len(s) <= 0:
+            return 0
+        res,neg = 0,False
+        if s[0] == '-':
+            s = s[1:]
+            neg = True
+        elif s[0] == '+':
+            s = s[1:]
+        for i in s:
+            if i >= '0' and i <= '9':
+                res = res*10 + int(i)
+            else:
+                return 0
+        if neg:
+            return -res
+        return res
 
 
 
